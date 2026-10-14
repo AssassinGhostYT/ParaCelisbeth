@@ -134,7 +134,7 @@ osito.addEventListener('click', () => {
 setTimeout(() => hablar('¡Holaaa! 🧸', 3200), 1200);
 
 /* ---------- 4. MÚSICA: la canción (reproductor de YouTube) ---------- */
-const VIDEO_ID = 'jvF7c40mv7I';
+const VIDEO_ID = 'nq3EaPNI8Cg';
 const btnMusica = document.getElementById('btn-musica');
 const textoMusica = document.getElementById('texto-musica');
 
