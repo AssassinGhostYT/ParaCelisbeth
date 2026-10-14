@@ -217,7 +217,7 @@ html, body {
 
 .osito .oreja {
   position: absolute;
-  top: -18px;
+  top: -34px;
   width: 58px; height: 58px;
   border-radius: 50%;
   background: radial-gradient(circle at 40% 35%, var(--osito-claro), var(--osito));
@@ -235,7 +235,7 @@ html, body {
 
 .osito .cabeza {
   position: absolute;
-  top: 8px; left: 50%;
+  top: -10px; left: 50%;
   width: 122px; height: 104px;
   margin-left: -61px;
   border-radius: 50%;
@@ -820,8 +820,8 @@ body.temblor { animation: temblor .5s ease; }
 /* ===== RESPONSIVE ===== */
 @media (max-width: 560px) {
   .osito { width: 108px; height: 146px; left: 3vw; bottom: 9vh; }
-  .osito .cabeza { width: 94px; height: 80px; margin-left: -47px; top: 4px; }
-  .osito .oreja { width: 46px; height: 46px; top: -14px; }
+  .osito .cabeza { width: 94px; height: 80px; margin-left: -47px; top: -8px; }
+  .osito .oreja { width: 46px; height: 46px; top: -26px; }
   .osito .oreja::after { inset: 11px; }
   .osito .ojo { top: 30px; width: 11px; height: 11px; }
   .osito .ojo.izq { left: 23px; }
