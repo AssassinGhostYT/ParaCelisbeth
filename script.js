@@ -20,6 +20,35 @@
   }
 })();
 
+(function crearMariposas() {
+  const cont = document.getElementById('mariposas');
+  for (let i = 0; i < 6; i++) {
+    const m = document.createElement('span');
+    m.className = 'mariposa';
+    m.textContent = '🦋';
+    m.style.top = `${8 + Math.random() * 52}%`;
+    m.style.fontSize = `${14 + Math.random() * 14}px`;
+    m.style.animationDuration = `${16 + Math.random() * 18}s`;
+    m.style.animationDelay = `${-Math.random() * 22}s`;
+    cont.appendChild(m);
+  }
+})();
+
+(function crearPetalos() {
+  const cont = document.getElementById('petalos-caen');
+  const simb = ['🌸', '🌷', '💮', '🌺'];
+  setInterval(() => {
+    const p = document.createElement('span');
+    p.className = 'petalo-cae';
+    p.textContent = simb[Math.floor(Math.random() * simb.length)];
+    p.style.left = `${Math.random() * 100}%`;
+    p.style.fontSize = `${12 + Math.random() * 14}px`;
+    p.style.animationDuration = `${7 + Math.random() * 7}s`;
+    cont.appendChild(p);
+    setTimeout(() => p.remove(), 15000);
+  }, 950);
+})();
+
 const lc = document.getElementById('luciernagas');
 const lctx = lc.getContext('2d');
 let luci = [];
@@ -104,121 +133,74 @@ osito.addEventListener('click', () => {
 
 setTimeout(() => hablar('¡Holaaa! 🧸', 3200), 1200);
 
-/* ---------- 4. MÚSICA (melodía suave generada) ---------- */
+/* ---------- 4. MÚSICA: la canción (reproductor de YouTube) ---------- */
+const VIDEO_ID = 'jvF7c40mv7I';
 const btnMusica = document.getElementById('btn-musica');
 const textoMusica = document.getElementById('texto-musica');
-let audioCtx = null, masterGain = null, filtro = null, reverb = null, reverbGain = null;
-let musicaSonando = false, planificadorID = null, siguienteTiempo = 0, pasoGlobal = 0;
 
-const ACORDES = [
-  [261.63, 329.63, 392.00, 523.25],
-  [196.00, 246.94, 293.66, 392.00],
-  [220.00, 261.63, 329.63, 440.00],
-  [174.61, 220.00, 261.63, 349.23],
-];
-const DURACION_PASO = 0.46;
+let reproductor = null;
+let playerListo = false;
+let musicaSonando = false;
+let quiereSonar = false;
 
-function crearReverb(ctx) {
-  const dur = 2.6, rate = ctx.sampleRate, len = Math.floor(rate * dur);
-  const buf = ctx.createBuffer(2, len, rate);
-  for (let ch = 0; ch < 2; ch++) {
-    const d = buf.getChannelData(ch);
-    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.4);
-  }
-  const conv = ctx.createConvolver();
-  conv.buffer = buf;
-  return conv;
-}
-
-function initAudio() {
-  if (audioCtx) return;
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  masterGain = audioCtx.createGain();
-  masterGain.gain.value = 0;
-  masterGain.connect(audioCtx.destination);
-
-  filtro = audioCtx.createBiquadFilter();
-  filtro.type = 'lowpass';
-  filtro.frequency.value = 2400;
-  filtro.Q.value = 0.5;
-  filtro.connect(masterGain);
-
-  reverb = crearReverb(audioCtx);
-  reverbGain = audioCtx.createGain();
-  reverbGain.gain.value = 0.4;
-  reverb.connect(reverbGain);
-  reverbGain.connect(masterGain);
-  filtro.connect(reverb);
-}
-
-function tocarNota(freq, cuando, dur, vol, tipo) {
-  const osc = audioCtx.createOscillator();
-  const g = audioCtx.createGain();
-  osc.type = tipo || 'triangle';
-  osc.frequency.value = freq;
-  g.gain.setValueAtTime(0.0001, cuando);
-  g.gain.linearRampToValueAtTime(vol, cuando + 0.03);
-  g.gain.exponentialRampToValueAtTime(0.0001, cuando + dur);
-  osc.connect(g);
-  g.connect(filtro);
-  osc.start(cuando);
-  osc.stop(cuando + dur + 0.05);
-}
-
-function programar() {
-  const horizonte = audioCtx.currentTime + 0.2;
-  while (siguienteTiempo < horizonte) {
-    const acorde = ACORDES[Math.floor(pasoGlobal / 4) % ACORDES.length];
-    const idx = pasoGlobal % 4;
-    const octava = Math.floor(pasoGlobal / 8) % 2 === 0 ? 2 : 1;
-    tocarNota(acorde[idx] * octava, siguienteTiempo, 1.2, 0.15, 'triangle');
-    if (idx === 3) tocarNota(acorde[0] * 2, siguienteTiempo + 0.22, 0.9, 0.07, 'sine');
-    if (idx === 0) {
-      tocarNota(acorde[0], siguienteTiempo, 2.3, 0.06, 'sine');
-      tocarNota(acorde[2], siguienteTiempo, 2.3, 0.045, 'sine');
-    }
-    siguienteTiempo += DURACION_PASO;
-    pasoGlobal++;
+function actualizarBotonMusica() {
+  if (musicaSonando) {
+    btnMusica.classList.add('sonando');
+    textoMusica.textContent = 'Pausar música';
+  } else {
+    btnMusica.classList.remove('sonando');
+    textoMusica.textContent = 'Dale click a la música';
   }
 }
 
-function iniciarMusica() {
-  initAudio();
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-  musicaSonando = true;
-  const t = audioCtx.currentTime;
-  masterGain.gain.cancelScheduledValues(t);
-  masterGain.gain.setValueAtTime(masterGain.gain.value, t);
-  masterGain.gain.linearRampToValueAtTime(0.5, t + 1.6);
-  if (!planificadorID) {
-    siguienteTiempo = audioCtx.currentTime + 0.1;
-    programar();
-    planificadorID = setInterval(programar, 60);
-  }
-  btnMusica.classList.add('sonando');
-  textoMusica.textContent = 'Sonando';
+function reproducir() {
+  quiereSonar = true;
+  if (playerListo && reproductor && reproductor.playVideo) reproductor.playVideo();
 }
 
 function pausarMusica() {
-  musicaSonando = false;
-  if (audioCtx) {
-    const t = audioCtx.currentTime;
-    masterGain.gain.cancelScheduledValues(t);
-    masterGain.gain.setValueAtTime(masterGain.gain.value, t);
-    masterGain.gain.linearRampToValueAtTime(0, t + 0.8);
-  }
-  btnMusica.classList.remove('sonando');
-  textoMusica.textContent = 'Pon música';
+  quiereSonar = false;
+  if (playerListo && reproductor && reproductor.pauseVideo) reproductor.pauseVideo();
 }
+
+window.onYouTubeIframeAPIReady = function () {
+  reproductor = new YT.Player('yt-player', {
+    videoId: VIDEO_ID,
+    playerVars: {
+      autoplay: 0,
+      controls: 0,
+      disablekb: 1,
+      loop: 1,
+      playlist: VIDEO_ID,
+      playsinline: 1,
+      modestbranding: 1,
+      rel: 0,
+    },
+    events: {
+      onReady: () => {
+        playerListo = true;
+        actualizarBotonMusica();
+        if (quiereSonar) reproductor.playVideo();
+      },
+      onStateChange: (e) => {
+        if (e.data === YT.PlayerState.PLAYING) musicaSonando = true;
+        else if (e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED) musicaSonando = false;
+        actualizarBotonMusica();
+      },
+    },
+  });
+};
 
 btnMusica.addEventListener('click', () => {
   if (musicaSonando) pausarMusica();
-  else iniciarMusica();
+  else reproducir();
 });
+
+actualizarBotonMusica();
 
 /* ---------- 5. INTRO ---------- */
 document.getElementById('btn-empezar').addEventListener('click', () => {
-  iniciarMusica();
+  reproducir();
   mostrarPantalla('p-jardin');
   setTimeout(() => {
     osito.classList.add('saludando');
@@ -229,14 +211,14 @@ document.getElementById('btn-empezar').addEventListener('click', () => {
 
 /* ---------- 6. LA SIEMBRA ---------- */
 const motivos = [
-  'Por tu sonrisa: es lo primero que busco cada vez que apareces. 🌻',
-  'Por tus ojos: tienen una forma de mirar que me deja sin palabras. 🌸',
-  'Porque me gusta todo de ti, y cada día descubro un motivo nuevo. 🌺',
-  'Porque aunque no te sobre el tiempo, cada ratito tuyo vale oro. 🌼',
-  'Por cómo me haces sentir: tranquilo, feliz, con ganas de más. 🌷',
-  'Porque simplemente me gustas, Celi, y ya no hay más que explicar. 💐',
+  'Por tu sonrisa: me la imagino y ya me pongo a sonreír solo. 🙈',
+  'Por tus ojos: no sé qué tienen, pero me pierden cada vez. ✨',
+  'Por cómo eres: sin filtros, sin fingir, tal cual. Eso me encanta. 💫',
+  'Porque hasta el ratito más pequeño que me das lo guardo como un tesoro. 💛',
+  'Porque me sacas unos nervios lindos que no sentía hace tiempo. 🥺',
+  'Porque me gustas, Celi. Así, simple y enorme a la vez. 🌻',
 ];
-const coloresFlor = ['#ffb703', '#ff7aa2', '#c77dff', '#ffd166', '#ff8fab', '#f4845f'];
+const coloresFlor = ['#ff9e6d', '#ff7aa2', '#c77dff', '#ffd166', '#ff8fab', '#9be3a0'];
 
 const macetero = document.getElementById('macetero');
 let floresPlantadas = 0;
@@ -309,8 +291,7 @@ function puntoCorazon(t) {
 
 function construirCorazonFlores() {
   const cont = document.getElementById('corazon-flores');
-  if (cont.dataset.listo) return;
-  cont.dataset.listo = '1';
+  cont.innerHTML = '';
 
   const W = cont.clientWidth || 480;
   const H = cont.clientHeight || 440;
@@ -354,15 +335,49 @@ function construirCorazonFlores() {
 }
 
 document.getElementById('btn-corazon-jardin').addEventListener('click', () => {
-  construirCorazonFlores();
   mostrarPantalla('p-corazon');
+  requestAnimationFrame(() => construirCorazonFlores());
 });
 
-/* ---------- 8. FINAL ---------- */
+window.addEventListener('resize', () => {
+  if (document.getElementById('p-corazon').classList.contains('activa')) construirCorazonFlores();
+});
+
+/* ---------- 8. HACIA LA PREGUNTA ---------- */
 document.getElementById('btn-final').addEventListener('click', () => {
-  mostrarPantalla('p-final');
-  iniciarLluvia();
-  hablar('dile, dile... 🧸💗', 3400);
+  mostrarPantalla('p-pregunta');
+  hablar('por favor di que sí... 🥺', 3400);
+});
+
+/* ---------- 8b. LA PREGUNTA (el "No" huye) ---------- */
+const btnNo = document.getElementById('btn-no');
+const btnSi = document.getElementById('btn-si');
+const respPregunta = document.getElementById('respuesta-pregunta');
+let huirPasos = 0;
+
+function huir() {
+  huirPasos++;
+  const maxX = Math.min(100, window.innerWidth * 0.2);
+  const x = (Math.random() - 0.5) * maxX * 2;
+  const y = (Math.random() - 0.5) * 70;
+  const esc = Math.max(0.55, 1 - huirPasos * 0.1);
+  btnNo.style.transform = `translate(${x}px, ${y}px) scale(${esc})`;
+  const frases = ['¿segura? 🥺', '¡uy, se movió!', 'el osito se puso triste', 'dale al "Sí" mejor 🙈', '¡no me atrapas!', 'piénsalo bien...', 'insisto: mejor sí 💗'];
+  respPregunta.textContent = frases[huirPasos % frases.length];
+}
+
+btnNo.addEventListener('pointerenter', huir);
+btnNo.addEventListener('click', (e) => { e.preventDefault(); huir(); });
+
+btnSi.addEventListener('click', () => {
+  respPregunta.textContent = '¡sabía que dirías sí! 🥰';
+  explosionDesde(btnSi);
+  saltar();
+  setTimeout(() => {
+    mostrarPantalla('p-final');
+    iniciarLluvia();
+    hablar('te dije que dirías sí 😌🧸', 3400);
+  }, 750);
 });
 
 const lluviaCont = document.getElementById('lluvia');

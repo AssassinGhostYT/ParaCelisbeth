@@ -2,13 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Para Celisbeth 🌅</title>
   <meta name="description" content="Un atardecer, un osito y un jardín, hechos para Celisbeth." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Pacifico&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="estilos.css?v=1" />
+  <link rel="stylesheet" href="estilos.css?v=7" />
 </head>
 <body>
 
@@ -16,18 +16,22 @@
   <div class="cielo" id="cielo">
     <div class="sol" id="sol"></div>
     <div class="nubes" id="nubes"></div>
+    <div class="mariposas" id="mariposas"></div>
     <div class="colinas"></div>
     <div class="pradera"></div>
   </div>
   <canvas id="luciernagas"></canvas>
+  <div class="petalos-caen" id="petalos-caen"></div>
 
   <button class="btn-musica" id="btn-musica" type="button">
     <span class="nota" id="nota-musica">♪</span>
-    <span id="texto-musica">Pon música</span>
+    <span id="texto-musica">Dale click a la música</span>
   </button>
 
+  <div class="yt-oculto"><div id="yt-player"></div></div>
+
   <!-- ===== OSITO ===== -->
-  <div class="osito" id="osito" title="El osito">
+  <div class="osito" id="osito" title="Tócame :)">
     <div class="oreja izq"></div>
     <div class="oreja der"></div>
     <div class="cabeza">
@@ -52,9 +56,9 @@
   <!-- ===== PANTALLA 1: INTRO ===== -->
   <section class="pantalla activa" id="p-intro">
     <div class="intro">
-      <p class="linea">Bajo el mismo cielo que tú...</p>
+      <p class="linea">Apareciste sin avisar...</p>
       <h1 class="titulo-atardecer">Para Celisbeth</h1>
-      <p class="intro-sub">Hay alguien pequeño que quiere mostrarte un jardín. 🌸</p>
+      <p class="intro-sub">y desde entonces hasta el atardecer se ve distinto. Hay un osito que quiere contarte algo. 🧸</p>
       <button class="boton" id="btn-empezar">
         Ver qué trae
         <span class="flecha">→</span>
@@ -65,9 +69,9 @@
   <!-- ===== PANTALLA 2: SIEMBRA ===== -->
   <section class="pantalla" id="p-jardin">
     <div class="encabezado">
-      <p class="linea">el osito guardó algo para ti</p>
-      <h2 class="titulo2">Siembra estas flores</h2>
-      <p class="sub2">Toca cada semilla y mira qué crece 🌱</p>
+      <p class="linea">cada flor guarda una razón</p>
+      <h2 class="titulo2">Cultiva lo que siento</h2>
+      <p class="sub2">Toca las semillas y descubre por qué me gustas tanto 🌱</p>
     </div>
     <div class="macetero" id="macetero"></div>
     <p class="pista" id="pista-flores">0 de 6 flores</p>
@@ -80,31 +84,44 @@
   <!-- ===== PANTALLA 3: CORAZÓN DE FLORES ===== -->
   <section class="pantalla" id="p-corazon">
     <div class="encabezado">
-      <p class="linea">todo lo que me haces sentir</p>
-      <h2 class="titulo2">se ve así</h2>
+      <p class="linea">mira lo que pasa cuando junto todo</p>
+      <h2 class="titulo2">esto eres para mí</h2>
     </div>
     <div class="corazon-flores" id="corazon-flores"></div>
     <button class="boton" id="btn-final">
-      Tengo algo que decirte
+      Sigue, hay algo más
       <span class="flecha">→</span>
     </button>
   </section>
 
-  <!-- ===== PANTALLA 4: FINAL ===== -->
+  <!-- ===== PANTALLA 4: LA PREGUNTA ===== -->
+  <section class="pantalla" id="p-pregunta">
+    <div class="encabezado">
+      <p class="linea">antes de terminar, una preguntita...</p>
+      <h2 class="titulo2">¿Me dejas acompañarte un ratito más?</h2>
+      <p class="sub2" id="respuesta-pregunta">El osito y yo queremos saberlo 🥺</p>
+    </div>
+    <div class="botones-pregunta">
+      <button class="boton btn-si" id="btn-si">Sí, claro ♡</button>
+      <button class="boton btn-no" id="btn-no">No... 🙈</button>
+    </div>
+  </section>
+
+  <!-- ===== PANTALLA 5: FINAL ===== -->
   <section class="pantalla" id="p-final">
     <div class="lluvia" id="lluvia"></div>
     <div class="final-caja" id="final-caja">
       <div class="carta-final" id="carta-final">
-        <p class="linea">cuando cae la tarde y pienso en ti...</p>
+        <p class="linea">ya no puedo esconderlo más...</p>
         <h1 class="megusta">me gustas</h1>
-        <p class="final-sub">muchísimo, Celisbeth. Sé que no somos novios todavía y lo respeto... pero me encantaría ser ese novio con el que siempre soñaste. Y el osito opina lo mismo. 🧸</p>
-        <button class="boton" id="btn-cerrar">Una última cosa ♡</button>
+        <p class="final-sub">muchísimo, Celisbeth. Sé que todavía no somos novios y lo respeto, pero no quería seguir guardándomelo. 🧸</p>
+        <button class="boton" id="btn-cerrar">Toca aquí 🥺</button>
       </div>
 
       <div class="despedida" id="despedida">
-        <p class="gracias">Gracias por leer, Celisbeth 🥺</p>
-        <p class="ultima">Si algún día quieres ser mi novia, me encantaría pedírtelo en persona...
-        aunque me da miedo ver una respuesta que no quiero ver. Aun así me arriesgo, porque tú vales la pena. ♡</p>
+        <p class="gracias">No puedo bajarte las estrellas 🥺</p>
+        <p class="ultima">ni regalarte la galaxia entera... pero aquí te hice un pedacito de universo, y quiero dártelo.<br><br>
+        En cada momento de mi día pienso en ti: en qué habrás hecho, qué habrás comido, cómo habrás amanecido... en verte y en sentirte. La distancia nos separa un poco, pero sé que juntos podemos romperla. 🌙</p>
       </div>
 
       <button class="fin" id="fin" type="button">Fin</button>
@@ -113,6 +130,7 @@
     </div>
   </section>
 
-  <script src="script.js?v=1"></script>
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="script.js?v=7"></script>
 </body>
 </html>

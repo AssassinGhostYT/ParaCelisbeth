@@ -217,7 +217,7 @@ html, body {
 
 .osito .oreja {
   position: absolute;
-  top: 0;
+  top: -18px;
   width: 58px; height: 58px;
   border-radius: 50%;
   background: radial-gradient(circle at 40% 35%, var(--osito-claro), var(--osito));
@@ -235,7 +235,7 @@ html, body {
 
 .osito .cabeza {
   position: absolute;
-  top: 26px; left: 50%;
+  top: 8px; left: 50%;
   width: 122px; height: 104px;
   margin-left: -61px;
   border-radius: 50%;
@@ -360,7 +360,7 @@ html, body {
 /* Globito de diálogo del osito */
 .globito {
   position: absolute;
-  top: -34px;
+  top: -62px;
   left: 50%;
   transform: translateX(-50%) scale(0);
   padding: .5rem 1rem;
@@ -760,19 +760,83 @@ body.temblor { animation: temblor .5s ease; }
   50%      { transform: scale(1.25) rotate(8deg); }
 }
 
+.yt-oculto {
+  position: fixed;
+  bottom: 0; right: 0;
+  width: 240px; height: 135px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+/* ===== MARIPOSAS Y PÉTALOS ===== */
+.mariposas { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.mariposa {
+  position: absolute;
+  font-size: 20px;
+  filter: drop-shadow(0 2px 4px rgba(60, 20, 20, .3));
+  animation: volarMariposa linear infinite;
+}
+@keyframes volarMariposa {
+  0%   { transform: translate(-10vw, 0) rotate(0deg); }
+  25%  { transform: translate(20vw, -34px) rotate(12deg); }
+  50%  { transform: translate(50vw, 22px) rotate(-10deg); }
+  75%  { transform: translate(80vw, -26px) rotate(14deg); }
+  100% { transform: translate(115vw, 10px) rotate(0deg); }
+}
+
+.petalos-caen { position: fixed; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+.petalo-cae {
+  position: absolute;
+  top: -30px;
+  font-size: 16px;
+  opacity: .85;
+  animation: caerPetalo linear infinite;
+}
+@keyframes caerPetalo {
+  0%   { transform: translateY(-30px) translateX(0) rotate(0deg); opacity: 0; }
+  10%  { opacity: .9; }
+  100% { transform: translateY(106vh) translateX(60px) rotate(320deg); opacity: 0; }
+}
+
+/* ===== PANTALLA PREGUNTA ===== */
+.botones-pregunta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 3vh;
+  min-height: 120px;
+}
+.botones-pregunta .boton { margin-top: 0; }
+.btn-si { animation: latir 1.7s ease-in-out infinite; font-size: 1.15rem; padding: 1.1rem 2.6rem; }
+.btn-no { transition: transform .25s cubic-bezier(.2, .8, .2, 1); }
+#respuesta-pregunta.rojo { color: #ffb3c1; animation: latir 1s ease-in-out infinite; }
+
+@keyframes latir { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.07); } }
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 560px) {
-  .osito { width: 112px; height: 150px; left: 3vw; bottom: 8vh; }
-  .osito .cabeza { width: 96px; height: 82px; margin-left: -48px; top: 20px; }
-  .osito .ojo { top: 32px; width: 11px; height: 11px; }
-  .osito .ojo.izq { left: 24px; }
-  .osito .ojo.der { right: 24px; }
-  .osito .hocico { top: 44px; width: 42px; height: 32px; margin-left: -21px; }
-  .osito .cuerpo { width: 88px; height: 74px; margin-left: -44px; bottom: 20px; }
-  .osito .oreja { width: 46px; height: 46px; }
+  .osito { width: 108px; height: 146px; left: 3vw; bottom: 9vh; }
+  .osito .cabeza { width: 94px; height: 80px; margin-left: -47px; top: 4px; }
+  .osito .oreja { width: 46px; height: 46px; top: -14px; }
   .osito .oreja::after { inset: 11px; }
+  .osito .ojo { top: 30px; width: 11px; height: 11px; }
+  .osito .ojo.izq { left: 23px; }
+  .osito .ojo.der { right: 23px; }
+  .osito .hocico { top: 42px; width: 42px; height: 32px; margin-left: -21px; }
+  .osito .cuerpo { width: 88px; height: 74px; margin-left: -44px; bottom: 20px; }
   .osito .brazo { width: 24px; height: 46px; }
   .osito .pierna { width: 36px; height: 32px; }
-  .osito .globito { font-size: .8rem; }
-  .pantalla { padding-bottom: 24vh; }
+  .osito .globito { font-size: .78rem; top: -54px; }
+  .pantalla { padding: 6vh 5vw 27vh; }
+  .corazon-flores { width: 92vw; height: min(400px, 47vh); }
+  .macetero { gap: .1rem; }
+  .semilla { width: clamp(58px, 30vw, 92px); }
+  .titulo-atardecer { font-size: clamp(2.6rem, 16vw, 4.5rem); }
+  .megusta { font-size: clamp(3.2rem, 20vw, 6rem); }
+  .final-sub, .ultima { padding: 0 4vw; }
+  .btn-si { padding: 1rem 2rem; }
 }
