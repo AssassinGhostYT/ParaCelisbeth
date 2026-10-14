@@ -211,12 +211,12 @@ document.getElementById('btn-empezar').addEventListener('click', () => {
 
 /* ---------- 6. LA SIEMBRA ---------- */
 const motivos = [
-  'Por tu sonrisa: me la imagino y ya me pongo a sonreír solo. 🙈',
-  'Por tus ojos: no sé qué tienen, pero me pierden cada vez. ✨',
-  'Por cómo eres: sin filtros, sin fingir, tal cual. Eso me encanta. 💫',
-  'Porque hasta el ratito más pequeño que me das lo guardo como un tesoro. 💛',
-  'Porque me sacas unos nervios lindos que no sentía hace tiempo. 🥺',
-  'Porque me gustas, Celi. Así, simple y enorme a la vez. 🌻',
+  'Porque tu nombre me aparece en la cabeza sin pedir permiso. 🌸',
+  'Porque contigo hasta lo más normal se siente distinto. 🌼',
+  'Porque quiero ser ese ratito de tu día que te saque una sonrisa. 🌻',
+  'Porque me dan ganas de contarte todo, hasta lo más pequeño. 💛',
+  'Porque me gusta la forma en que existes, sin más. ✨',
+  'Porque te pienso más de lo que quiero admitir. 🙈',
 ];
 const coloresFlor = ['#ff9e6d', '#ff7aa2', '#c77dff', '#ffd166', '#ff8fab', '#9be3a0'];
 
@@ -444,30 +444,178 @@ function config_colores() {
   return c[Math.floor(Math.random() * c.length)];
 }
 
-/* ---------- 10. EL "FIN" EXPLOTA ---------- */
-const botonFin = document.getElementById('fin');
-botonFin.addEventListener('click', () => {
-  if (botonFin.dataset.explotando) return;
-  botonFin.dataset.explotando = '1';
+/* ---------- 10. LA GALAXIA FINAL (ella toca y se abre el universo) ---------- */
+const galaxia = document.getElementById('galaxia');
+const galaxiaCanvas = document.getElementById('galaxia-canvas');
+let gctx = null;
+let galaxiaActiva = false;
+let galaxiaStars = [];
+let galaxiaRAF = null;
+let galaxiaW = 0, galaxiaH = 0;
 
-  const grande = document.createElement('span');
-  grande.className = 'corazon-gigante';
-  grande.textContent = '♥';
-  document.body.appendChild(grande);
-  setTimeout(() => grande.remove(), 1300);
+function medirGalaxia() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  galaxiaW = window.innerWidth;
+  galaxiaH = window.innerHeight;
+  galaxiaCanvas.width = Math.floor(galaxiaW * dpr);
+  galaxiaCanvas.height = Math.floor(galaxiaH * dpr);
+  gctx = galaxiaCanvas.getContext('2d');
+  gctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
 
-  document.body.classList.add('temblor');
-  setTimeout(() => document.body.classList.remove('temblor'), 520);
+function crearGalaxiaEstrellas() {
+  galaxiaStars = [];
+  const N = 540;
+  const brazos = 2;
+  const mx = Math.min(galaxiaW, galaxiaH) * 0.46;
+  for (let i = 0; i < N; i++) {
+    const brazo = i % brazos;
+    const t = Math.pow(Math.random(), 0.65);
+    const radio = 8 + t * mx;
+    const angulo = brazo * (Math.PI * 2 / brazos) + t * 2.6 + (Math.random() - 0.5) * 0.6;
+    const velocidad = 0.0016 + 0.0035 / (radio / 40 + 1);
+    galaxiaStars.push({
+      radio, angulo, velocidad,
+      tam: 0.5 + Math.random() * 1.7,
+      brillo: 0.35 + Math.random() * 0.65,
+      fase: Math.random() * Math.PI * 2,
+    });
+  }
+}
 
-  explosionDesde(null);
-  setTimeout(() => explosionDesde(null), 650);
+function colorGalaxia(r) {
+  const mx = Math.min(galaxiaW, galaxiaH) * 0.46;
+  const t = Math.min(1, r / mx);
+  const a = [255, 226, 170];
+  const b = [150, 120, 255];
+  const c = [120, 190, 255];
+  let from, to, k;
+  if (t < 0.5) { from = a; to = b; k = t / 0.5; }
+  else { from = b; to = c; k = (t - 0.5) / 0.5; }
+  const out = from.map((v, i) => (v + (to[i] - v) * k) | 0);
+  return `rgb(${out[0]}, ${out[1]}, ${out[2]})`;
+}
 
-  // cae la noche
+function animarGalaxia() {
+  if (!gctx) return;
+  const w = galaxiaW, h = galaxiaH;
+  const radioNucleo = Math.min(w, h) * 0.22;
+  gctx.clearRect(0, 0, w, h);
+  gctx.save();
+  gctx.translate(w / 2, h / 2);
+
+  const nucleo = gctx.createRadialGradient(0, 0, 0, 0, 0, radioNucleo);
+  nucleo.addColorStop(0, 'rgba(255, 241, 214, .85)');
+  nucleo.addColorStop(0.35, 'rgba(255, 200, 150, .33)');
+  nucleo.addColorStop(1, 'rgba(255, 180, 140, 0)');
+  gctx.fillStyle = nucleo;
+  gctx.beginPath();
+  gctx.arc(0, 0, radioNucleo, 0, Math.PI * 2);
+  gctx.fill();
+
+  const inclina = 0.46;
+  for (const s of galaxiaStars) {
+    s.angulo += s.velocidad;
+    const x = Math.cos(s.angulo) * s.radio;
+    const y = Math.sin(s.angulo) * s.radio * inclina;
+    const parpadeo = 0.55 + 0.45 * Math.sin(s.fase + s.angulo * 1.3);
+    gctx.globalAlpha = s.brillo * parpadeo;
+    gctx.fillStyle = colorGalaxia(s.radio);
+    gctx.beginPath();
+    gctx.arc(x, y, s.tam, 0, Math.PI * 2);
+    gctx.fill();
+  }
+  gctx.globalAlpha = 1;
+  gctx.restore();
+
+  galaxiaRAF = requestAnimationFrame(animarGalaxia);
+}
+
+function mostrarFraseGalaxia(texto, alTerminar) {
+  const el = document.getElementById('galaxia-palabra');
+  el.textContent = '';
+  el.classList.add('visible');
+  let k = 0;
+  const paso = () => {
+    if (k <= texto.length) {
+      el.textContent = texto.slice(0, k);
+      k++;
+      setTimeout(paso, 55);
+    } else {
+      setTimeout(() => {
+        el.classList.remove('visible');
+        setTimeout(alTerminar, 520);
+      }, 950);
+    }
+  };
+  setTimeout(paso, 260);
+}
+
+function secuenciaGalaxia() {
+  const frases = [
+    'me gustas ✨',
+    'te extraño 🌙',
+    'pienso en ti 💫',
+    'me haces sonreír 🙈',
+    'quiero estar contigo 🌻',
+  ];
+  let i = 0;
+  const siguiente = () => {
+    if (i >= frases.length) { iniciarEstrellasGalaxia(); return; }
+    mostrarFraseGalaxia(frases[i], () => { i++; siguiente(); });
+  };
+  setTimeout(siguiente, 1500);
+}
+
+function iniciarEstrellasGalaxia() {
+  const cont = document.getElementById('estrellas-caen');
+  const baja = document.getElementById('galaxia-baja');
+  baja.classList.add('visible');
+  const simb = ['✦', '✧', '★', '⭐', '✨', '⋆'];
+  let n = 0;
+  const id = setInterval(() => {
+    for (let k = 0; k < 3; k++) {
+      const s = document.createElement('span');
+      s.className = 'estrella-cae';
+      s.textContent = simb[Math.floor(Math.random() * simb.length)];
+      s.style.left = `${Math.random() * 100}%`;
+      s.style.fontSize = `${12 + Math.random() * 24}px`;
+      s.style.animationDuration = `${3 + Math.random() * 4}s`;
+      s.style.animationDelay = `${Math.random() * 0.8}s`;
+      cont.appendChild(s);
+      setTimeout(() => s.remove(), 8000);
+    }
+    n++;
+    if (n >= 24) {
+      clearInterval(id);
+      setTimeout(mostrarFinalGalaxia, 1500);
+    }
+  }, 260);
+}
+
+function mostrarFinalGalaxia() {
+  document.getElementById('galaxia-baja').classList.remove('visible');
+  document.getElementById('galaxia-final').classList.add('visible');
+}
+
+function abrirGalaxia() {
+  if (galaxiaActiva) return;
+  galaxiaActiva = true;
+  galaxia.classList.add('activa');
+  document.body.classList.add('sin-scroll');
+  medirGalaxia();
+  crearGalaxiaEstrellas();
+  animarGalaxia();
   document.getElementById('cielo').classList.add('noche');
   intensidadLuci = 1;
-
   saltar();
-  setTimeout(() => { delete botonFin.dataset.explotando; }, 1600);
+  setTimeout(secuenciaGalaxia, 900);
+}
+
+document.getElementById('btn-galaxia').addEventListener('click', abrirGalaxia);
+
+window.addEventListener('resize', () => {
+  if (galaxiaActiva) { medirGalaxia(); crearGalaxiaEstrellas(); }
 });
 
 /* ---------- 11. DESTELLOS DEL CURSOR ---------- */

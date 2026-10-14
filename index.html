@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Pacifico&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="estilos.css?v=8" />
+  <link rel="stylesheet" href="estilos.css?v=9" />
 </head>
 <body>
 
@@ -114,23 +114,30 @@
       <div class="carta-final" id="carta-final">
         <p class="linea">ya no puedo esconderlo más...</p>
         <h1 class="megusta">me gustas</h1>
-        <p class="final-sub">muchísimo, Celisbeth. Sé que todavía no somos novios y lo respeto, pero no quería seguir guardándomelo. 🧸</p>
+        <p class="final-sub">y no me lo puedo seguir callando. No sé en qué acabe todo esto, pero hoy solo quería que lo supieras. 🌙</p>
         <button class="boton" id="btn-cerrar">Toca aquí 🥺</button>
       </div>
 
       <div class="despedida" id="despedida">
-        <p class="gracias">No puedo bajarte las estrellas 🥺</p>
-        <p class="ultima">ni regalarte la galaxia entera... pero aquí te hice un pedacito de universo, y quiero dártelo.<br><br>
-        En cada momento de mi día pienso en ti: en qué habrás hecho, qué habrás comido, cómo habrás amanecido... en verte y en sentirte. La distancia nos separa un poco, pero sé que juntos podemos romperla. 🌙</p>
+        <p class="gracias">Antes de que te vayas...</p>
+        <p class="ultima">En cada momento de mi día apareces: en qué habrás hecho, qué habrás comido, cómo habrás amanecido... en verte y en sentirte. La distancia nos separa un poco, pero sé que se puede romper. 🌙</p>
+        <button class="boton" id="btn-galaxia" type="button">Hay una última cosa... ✨</button>
       </div>
 
-      <button class="fin" id="fin" type="button">Fin</button>
-      <p class="pista-fin">toca el Fin ♡</p>
       <p class="pd">Hecho con muchísimo cariño, solo para ti, Celisbeth. — Jose ♡</p>
     </div>
   </section>
 
+  <!-- ===== LA GALAXIA FINAL ===== -->
+  <div class="galaxia" id="galaxia" aria-hidden="true">
+    <canvas id="galaxia-canvas"></canvas>
+    <div class="estrellas-caen" id="estrellas-caen"></div>
+    <h2 class="galaxia-palabra" id="galaxia-palabra"></h2>
+    <p class="galaxia-baja" id="galaxia-baja">ten... aquí te bajé las estrellas ✨</p>
+    <p class="galaxia-final" id="galaxia-final">Te extraño<br>y quiero estar contigo<br>toda la vida 🌙</p>
+  </div>
+
   <script src="https://www.youtube.com/iframe_api"></script>
-  <script src="script.js?v=8"></script>
+  <script src="script.js?v=9"></script>
 </body>
 </html>
