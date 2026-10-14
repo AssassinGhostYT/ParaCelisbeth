@@ -465,19 +465,22 @@ function medirGalaxia() {
 
 function crearGalaxiaEstrellas() {
   galaxiaStars = [];
-  const N = 540;
-  const brazos = 2;
   const mx = Math.min(galaxiaW, galaxiaH) * 0.46;
-  for (let i = 0; i < N; i++) {
+  const brazos = 4;
+  const total = 980;
+  for (let i = 0; i < total; i++) {
+    const disperso = i % 5 === 0;
+    const t = Math.pow(Math.random(), 0.62);
+    const radio = 6 + t * mx;
     const brazo = i % brazos;
-    const t = Math.pow(Math.random(), 0.65);
-    const radio = 8 + t * mx;
-    const angulo = brazo * (Math.PI * 2 / brazos) + t * 2.6 + (Math.random() - 0.5) * 0.6;
-    const velocidad = 0.0016 + 0.0035 / (radio / 40 + 1);
+    const angulo = disperso
+      ? Math.random() * Math.PI * 2
+      : brazo * (Math.PI * 2 / brazos) + t * 3.2 + (Math.random() - 0.5) * 0.85;
+    const velocidad = 0.0014 + 0.0032 / (radio / 45 + 1);
     galaxiaStars.push({
       radio, angulo, velocidad,
       tam: 0.5 + Math.random() * 1.7,
-      brillo: 0.35 + Math.random() * 0.65,
+      brillo: (disperso ? 0.25 : 0.4) + Math.random() * 0.6,
       fase: Math.random() * Math.PI * 2,
     });
   }
@@ -513,7 +516,7 @@ function animarGalaxia() {
   gctx.arc(0, 0, radioNucleo, 0, Math.PI * 2);
   gctx.fill();
 
-  const inclina = 0.46;
+  const inclina = 1;
   for (const s of galaxiaStars) {
     s.angulo += s.velocidad;
     const x = Math.cos(s.angulo) * s.radio;
@@ -596,7 +599,37 @@ function iniciarEstrellasGalaxia() {
 function mostrarFinalGalaxia() {
   document.getElementById('galaxia-baja').classList.remove('visible');
   document.getElementById('galaxia-final').classList.add('visible');
+  setTimeout(() => document.getElementById('btn-besos').classList.add('visible'), 2400);
 }
+
+function lluviaDeBesos() {
+  const cont = document.getElementById('besos');
+  const simb = ['💋', '😘', '😚', '💗', '❤️', '💕', '🥰'];
+  let n = 0;
+  const id = setInterval(() => {
+    for (let k = 0; k < 4; k++) {
+      const b = document.createElement('span');
+      b.className = 'beso';
+      b.textContent = simb[Math.floor(Math.random() * simb.length)];
+      b.style.left = `${Math.random() * 100}%`;
+      b.style.fontSize = `${18 + Math.random() * 30}px`;
+      b.style.animationDuration = `${3 + Math.random() * 3}s`;
+      b.style.animationDelay = `${Math.random() * 0.6}s`;
+      b.style.setProperty('--rot', `${(Math.random() - 0.5) * 40}deg`);
+      cont.appendChild(b);
+      setTimeout(() => b.remove(), 7000);
+    }
+    n++;
+    if (n >= 18) clearInterval(id);
+  }, 240);
+}
+
+document.getElementById('btn-besos').addEventListener('click', () => {
+  document.getElementById('btn-besos').classList.add('clickeado');
+  document.getElementById('galaxia-final').classList.remove('visible');
+  document.getElementById('galaxia-gracias').classList.add('visible');
+  lluviaDeBesos();
+});
 
 function abrirGalaxia() {
   if (galaxiaActiva) return;
@@ -609,6 +642,7 @@ function abrirGalaxia() {
   document.getElementById('cielo').classList.add('noche');
   intensidadLuci = 1;
   saltar();
+  setTimeout(() => document.getElementById('galaxia-corazon').classList.add('visible'), 700);
   setTimeout(secuenciaGalaxia, 900);
 }
 
