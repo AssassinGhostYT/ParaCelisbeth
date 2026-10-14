@@ -8,7 +8,7 @@
   --osito: #c98a54;
   --osito-claro: #e0ab78;
   --osito-oscuro: #a86b3c;
-  --contorno: 0 0 2px rgba(0,0,0,.9), 1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000, 0 3px 8px rgba(0,0,0,.85);
+  --contorno: 0 0 3px rgba(0,0,0,.95), 2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000, -2px -2px 0 #000, 0 4px 12px rgba(0,0,0,.95);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -206,15 +206,22 @@ html, body {
   filter: drop-shadow(0 16px 20px rgba(30, 10, 20, .45));
 }
 
-@keyframes ositoFlota {
-  0%, 100% { transform: translateY(0) rotate(-1.5deg) scale(var(--esc)); }
-  50%      { transform: translateY(-10px) rotate(1.5deg) scale(var(--esc)); }
+.osito-fig {
+  position: absolute;
+  inset: 0;
+  transform-origin: bottom center;
+  transform: scale(var(--esc));
 }
 
-.osito.salta { animation: ositoSalta .6s ease forwards; }
+@keyframes ositoFlota {
+  0%, 100% { transform: translateY(0) rotate(-1.5deg); }
+  50%      { transform: translateY(-10px) rotate(1.5deg); }
+}
+
+.osito.salta { animation: ositoSalta .6s ease; }
 @keyframes ositoSalta {
-  0%, 100% { transform: translateY(0) scale(var(--esc)); }
-  40%      { transform: translateY(-28px) scale(var(--esc)); }
+  0%, 100% { transform: translateY(0); }
+  40%      { transform: translateY(-28px); }
 }
 
 .osito .oreja {
@@ -987,6 +994,13 @@ body.temblor { animation: temblor .5s ease; }
 .btn-besos.clickeado { display: none; }
 
 body.sin-scroll { overflow: hidden; }
+
+/* ===== BORDE NEGRO EN LAS LETRAS ===== */
+.galaxia-palabra, .galaxia-baja, .galaxia-final, .galaxia-gracias,
+.linea, .titulo-atardecer, .megusta, .final-sub, .gracias, .ultima, .pista, .pd {
+  -webkit-text-stroke: 1px rgba(0, 0, 0, .7);
+  paint-order: stroke fill;
+}
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 560px) {
