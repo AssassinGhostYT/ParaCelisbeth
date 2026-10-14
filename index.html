@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para Celisbeth 🌅</title>
+  <meta name="description" content="Un atardecer, un osito y un jardín, hechos para Celisbeth." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="estilos.css?v=1" />
+</head>
+<body>
+
+  <!-- Cielo y paisaje -->
+  <div class="cielo" id="cielo">
+    <div class="sol" id="sol"></div>
+    <div class="nubes" id="nubes"></div>
+    <div class="colinas"></div>
+    <div class="pradera"></div>
+  </div>
+  <canvas id="luciernagas"></canvas>
+
+  <button class="btn-musica" id="btn-musica" type="button">
+    <span class="nota" id="nota-musica">♪</span>
+    <span id="texto-musica">Pon música</span>
+  </button>
+
+  <!-- ===== OSITO ===== -->
+  <div class="osito" id="osito" title="El osito">
+    <div class="oreja izq"></div>
+    <div class="oreja der"></div>
+    <div class="cabeza">
+      <div class="ojo izq"><span></span></div>
+      <div class="ojo der"><span></span></div>
+      <div class="hocico">
+        <span class="nariz"></span>
+      </div>
+      <span class="cachete izq"></span>
+      <span class="cachete der"></span>
+    </div>
+    <div class="cuerpo">
+      <div class="brazo izq"></div>
+      <div class="brazo der"></div>
+      <div class="panza"></div>
+      <div class="pierna izq"></div>
+      <div class="pierna der"></div>
+    </div>
+    <span class="globito" id="globito"></span>
+  </div>
+
+  <!-- ===== PANTALLA 1: INTRO ===== -->
+  <section class="pantalla activa" id="p-intro">
+    <div class="intro">
+      <p class="linea">Bajo el mismo cielo que tú...</p>
+      <h1 class="titulo-atardecer">Para Celisbeth</h1>
+      <p class="intro-sub">Hay alguien pequeño que quiere mostrarte un jardín. 🌸</p>
+      <button class="boton" id="btn-empezar">
+        Ver qué trae
+        <span class="flecha">→</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== PANTALLA 2: SIEMBRA ===== -->
+  <section class="pantalla" id="p-jardin">
+    <div class="encabezado">
+      <p class="linea">el osito guardó algo para ti</p>
+      <h2 class="titulo2">Siembra estas flores</h2>
+      <p class="sub2">Toca cada semilla y mira qué crece 🌱</p>
+    </div>
+    <div class="macetero" id="macetero"></div>
+    <p class="pista" id="pista-flores">0 de 6 flores</p>
+    <button class="boton" id="btn-corazon-jardin" disabled>
+      Ver lo que creció
+      <span class="flecha">→</span>
+    </button>
+  </section>
+
+  <!-- ===== PANTALLA 3: CORAZÓN DE FLORES ===== -->
+  <section class="pantalla" id="p-corazon">
+    <div class="encabezado">
+      <p class="linea">todo lo que me haces sentir</p>
+      <h2 class="titulo2">se ve así</h2>
+    </div>
+    <div class="corazon-flores" id="corazon-flores"></div>
+    <button class="boton" id="btn-final">
+      Tengo algo que decirte
+      <span class="flecha">→</span>
+    </button>
+  </section>
+
+  <!-- ===== PANTALLA 4: FINAL ===== -->
+  <section class="pantalla" id="p-final">
+    <div class="lluvia" id="lluvia"></div>
+    <div class="final-caja" id="final-caja">
+      <div class="carta-final" id="carta-final">
+        <p class="linea">cuando cae la tarde y pienso en ti...</p>
+        <h1 class="megusta">me gustas</h1>
+        <p class="final-sub">muchísimo, Celisbeth. Sé que no somos novios todavía y lo respeto... pero me encantaría ser ese novio con el que siempre soñaste. Y el osito opina lo mismo. 🧸</p>
+        <button class="boton" id="btn-cerrar">Una última cosa ♡</button>
+      </div>
+
+      <div class="despedida" id="despedida">
+        <p class="gracias">Gracias por leer, Celisbeth 🥺</p>
+        <p class="ultima">Si algún día quieres ser mi novia, me encantaría pedírtelo en persona...
+        aunque me da miedo ver una respuesta que no quiero ver. Aun así me arriesgo, porque tú vales la pena. ♡</p>
+      </div>
+
+      <button class="fin" id="fin" type="button">Fin</button>
+      <p class="pista-fin">toca el Fin ♡</p>
+      <p class="pd">Hecho con muchísimo cariño, solo para ti, Celisbeth. — Jose ♡</p>
+    </div>
+  </section>
+
+  <script src="script.js?v=1"></script>
+</body>
+</html>
