@@ -117,10 +117,13 @@ function hablar(texto, ms = 2600) {
   globitoTimer = setTimeout(() => globito.classList.remove('visible'), ms);
 }
 
+let saltaTimer = null;
 function saltar() {
   osito.classList.remove('salta');
   void osito.offsetWidth;
   osito.classList.add('salta');
+  clearTimeout(saltaTimer);
+  saltaTimer = setTimeout(() => osito.classList.remove('salta'), 700);
 }
 
 osito.addEventListener('click', () => {
